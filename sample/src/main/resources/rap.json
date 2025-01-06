@@ -1,0 +1,17 @@
+[
+    {
+        "resourceType": "com.nob.authz.sample.model.Note",
+        "pathTemplate": "/api/note/{id}",
+        "httpMethod": "GET",
+        "accessor": "com.nob.authz.sample.repository.NoteService",
+        "accessorMethod": "getNote",
+        "parameterMappings": [
+            {
+                "parameterName": "id",
+                "source": "PATH_VARIABLE",
+                "parameterType": "java.lang.Long",
+                "index": 0
+            }
+        ]
+    }
+]

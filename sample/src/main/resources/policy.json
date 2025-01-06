@@ -1,0 +1,36 @@
+{
+    "id": "1",
+    "description": "policy for note service",
+    "target": {
+        "type": "LITERAL",
+        "expression": "environment.getServiceEnv('application.name') == 'sample'"
+    },
+    "combineAlgorithmName": "DENY_UNLESS_PERMIT",
+    "isRoot": true,
+    "policies": [
+        {
+            "id": "notePolicy",
+            "description": "apply for note policy",
+            "target": {
+                "type": "LITERAL",
+                "expression": "object.name == 'note'"
+            },
+            "combineAlgorithmName": "DENY_UNLESS_PERMIT",
+            "rules": [
+                {
+                    "id": "noteSpecificRule",
+                    "description": "apply for get specific rule",
+                    "target": {
+                        "type": "LITERAL",
+                        "expression": "T(com.nob.authorization.core.utils.StringUtils).matchUrlPath('/api/note/{id}', action.request.requestedURI) && action.request.method == 'GET'"
+                    },
+                    "condition": {
+                        "type": "LITERAL",
+                        "expression": "subject.userId == object.data.userId"
+                    },
+                    "effect": "PERMIT"
+                }
+            ]
+        }
+    ]
+}
