@@ -1,5 +1,6 @@
 package com.nob.authz.sample.repository;
 
+import com.nob.authorization.authzclient.pep.PostEnforce;
 import com.nob.authz.sample.model.Note;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
+    @PostEnforce
     public Note getNote(Long id) {
         return noteRepository.findById(id).orElse(null);
     }

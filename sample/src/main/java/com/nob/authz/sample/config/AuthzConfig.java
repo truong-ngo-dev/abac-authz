@@ -11,7 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import java.util.Set;
+
+import java.util.HashSet;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,12 +21,9 @@ public class AuthzConfig {
     private final ApplicationContext applicationContext;
 
     @Bean
-    public ResourceProvider resourceProvider() {
-        Set<String> requiredFetchResources = Set.of("/api/note/{id}");
+    public ResourceAccessConfig resourceAccessConfig() {
         String apiPattern = "^/api/(\\w+)/?.*$";
-        ResourceAccessConfig config = new ResourceAccessConfig(apiPattern, requiredFetchResources);
-        ResourceAccessPoint resourceAccessPoint = new ResourceAccessPoint();
-        return new ResourceProvider(config, resourceAccessPoint, applicationContext);
+        return new ResourceAccessConfig(apiPattern, new HashSet<>());
     }
 
     @Bean
@@ -33,12 +31,12 @@ public class AuthzConfig {
         PolicyProvider policyProvider = applicationContext.getBean(PolicyProvider.class);
         EnvironmentProvider environmentProvider = applicationContext.getBean(EnvironmentProvider.class);
         SubjectProvider subjectProvider = applicationContext.getBean(SubjectProvider.class);
-        return new PipEngine(policyProvider, environmentProvider, subjectProvider, resourceProvider());
+        return new PipEngine(policyProvider, environmentProvider, subjectProvider, resourceAccessConfig());
     }
 
     @Bean
     public PepEngine pepEngine() {
-        return new PepEngine(DecisionStrategy.NOT_APPLICABLE_PERMIT_INDETERMINATE_DENY, pipEngine());
+        return new PepEngine(DecisionStrategy.NOT_APPLICABLE_PERMIT_INDETERMINATE_DENY);
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 @Component
 public class EnvironmentProvider implements com.nob.authorization.authzclient.pip.EnvironmentProvider {
 
-    private final Environment environment;
+    private Environment environment;
 
     @Value("${spring.application.name}")
     private String applicationName;
@@ -17,15 +17,17 @@ public class EnvironmentProvider implements com.nob.authorization.authzclient.pi
     @Value("${server.port}")
     private int port;
 
-    public EnvironmentProvider() {
-        this.environment =  new Environment();
-        environment.setService(new LinkedHashMap<>());
-        environment.addServiceEnv("application.name", applicationName);
-        environment.addServiceEnv("application.port", port);
+    public EnvironmentProvider() {;
     }
 
     @Override
     public Environment getEnvironment(String serviceName) {
+        if (environment == null) {
+            environment = new Environment();
+            environment.setService(new LinkedHashMap<>());
+            environment.addServiceEnv("application.name", applicationName);
+            environment.addServiceEnv("application.port", port);
+        }
         return environment;
     }
 }

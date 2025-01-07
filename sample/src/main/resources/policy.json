@@ -28,7 +28,7 @@
                         "type": "LITERAL",
                         "expression": "subject.userId == object.data.userId"
                     },
-                    "effect": "PERMIT"
+                    "effect": "DENY"
                 }
             ]
         }
