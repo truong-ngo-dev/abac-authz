@@ -56,7 +56,7 @@ public class PepEngine {
     public AuthzDecision enforce(AuthzRequest authzRequest) {
         log.info("enforce authz request: {}", authzRequest);
         AuthzDecision decision = pdpEngine.authorize(authzRequest);
-        log.debug("enforce decision: {}", decision.getDecision());
+        log.info("enforce decision: {}", decision.getDecision());
         return decision;
     }
 }
