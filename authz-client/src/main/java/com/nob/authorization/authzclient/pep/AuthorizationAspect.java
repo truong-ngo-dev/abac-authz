@@ -16,8 +16,12 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * An aspect that enforces authorization policies for methods annotated with
@@ -84,8 +88,12 @@ public class AuthorizationAspect {
      */
     @Before(value = "@annotation(com.nob.authorization.authzclient.pep.PreEnforce)")
     public void preEnforce(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        PreEnforce enforcer = method.getAnnotation(PreEnforce.class);
+        String[] ignoredPath = enforcer.ignore();
         AuthzRequest authzRequest = prepareAuthzRequest();
-        AuthzDecision decision = pepEngine.enforce(authzRequest);
+        AuthzDecision decision = pepEngine.enforce(authzRequest, ignoredPath);
         if (decision.isDeny())
             throw new AuthorizationException("Forbidden", decision.getDetails(), decision.getTimestamp());
     }
@@ -103,9 +111,13 @@ public class AuthorizationAspect {
      */
     @AfterReturning(value = "@annotation(com.nob.authorization.authzclient.pep.PostEnforce)", returning = "returnObject")
     public void postEnforce(JoinPoint joinPoint, Object returnObject) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        PostEnforce enforcer = method.getAnnotation(PostEnforce.class);
+        String[] ignoredPath = enforcer.ignore();
         AuthzRequest authzRequest = prepareAuthzRequest();
         authzRequest.getObject().setData(returnObject);
-        AuthzDecision decision = pepEngine.enforce(authzRequest);
+        AuthzDecision decision = pepEngine.enforce(authzRequest, ignoredPath);
         if (decision.isDeny())
             throw new AuthorizationException("Forbidden", decision.getDetails(), decision.getTimestamp());
     }

@@ -8,4 +8,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PreEnforce {
+    String[] ignore() default {};
 }

@@ -6,7 +6,10 @@ import com.nob.authorization.core.context.Resource;
 import com.nob.authorization.core.context.Subject;
 import com.nob.authorization.core.domain.AbstractPolicy;
 import com.nob.authorization.core.pdp.*;
+import com.nob.authorization.core.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.stream.Stream;
 
 /**
  * Represents the Policy Enforcement Point (PEP) engine in the context of an Attribute-Based Access Control (ABAC) system.
@@ -53,8 +56,14 @@ public class PepEngine {
      * @param authzRequest The authorization request containing the details to be evaluated.
      * @return The result of the authorization evaluation as an {@link AuthzDecision}.
      */
-    public AuthzDecision enforce(AuthzRequest authzRequest) {
+    public AuthzDecision enforce(AuthzRequest authzRequest, String[] ignoredPath) {
         log.info("enforce authz request: {}", authzRequest);
+        String path = authzRequest.getAction().getRequest().getRequestedURI();
+        boolean ignore = Stream.of(ignoredPath).anyMatch(i -> StringUtils.matchUrlPath(i, path));
+        if (ignore) {
+            log.info("Ignore enforce for path: {}", path);
+            return new AuthzDecision(AuthzDecision.Decision.PERMIT,"Ignore path: " + path);
+        }
         AuthzDecision decision = pdpEngine.authorize(authzRequest);
         log.info("enforce decision: {}", decision.getDecision());
         return decision;
