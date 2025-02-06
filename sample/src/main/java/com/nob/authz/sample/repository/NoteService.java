@@ -18,6 +18,7 @@ public class NoteService {
     }
 
     @PostEnforce
+//    @PostEnforce(ignore = "/api/note/{id}")
     public Note getNote(Long id) {
         return noteRepository.findById(id).orElse(null);
     }
