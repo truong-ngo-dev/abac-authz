@@ -3,39 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.nob.authz</groupId>
+        <artifactId>abac-authz-starter</artifactId>
+        <version>1.0.0</version>
     </parent>
-    <groupId>com.nob.abac-authz</groupId>
     <artifactId>authz-client</artifactId>
-    <version>0.0.1</version>
-    <name>authz-client</name>
-    <description>authz-client</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+
     <properties>
         <java.version>17</java.version>
         <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
     </properties>
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,19 +24,13 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.truong-ngo-dev.abac-authz</groupId>
+            <groupId>com.nob.authz</groupId>
             <artifactId>core</artifactId>
-            <version>master-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
