@@ -17,8 +17,175 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Utility class for HTTP-related operations.
+ * <p>
+ * This class provides static methods for extracting and processing HTTP
+ * request data, such as retrieving the request URL, URI, context path,
+ * query string, and servlet patterns. It is intended to simplify common
+ * operations related to {@link HttpServletRequest}.
+ * @author Truong Ngo
+ */
 @Slf4j
 public class HttpUtils {
+
+
+    /**
+     * Retrieves the full URL of the current request.
+     * <p>
+     * This method constructs the full URL of the request, including the scheme,
+     * server name, port number, and the request URI. Query parameters are not included
+     * in the returned URL.
+     * </p>
+     *
+     * <p>
+     * For example, if the request URL is {@code http://localhost:8080/myapp/api/users?id=123},
+     * this method will return {@code http://localhost:8080/myapp/api/users}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the full URL of the current request as a {@link String}
+     */
+    public static String getUrl(HttpServletRequest request) {
+        return request.getRequestURL().toString();
+    }
+
+
+    /**
+     * Retrieves the query string of the current request.
+     * <p>
+     * The query string is the portion of the URL that contains additional data
+     * sent with the request, typically following a question mark (`?`). It includes
+     * key-value pairs separated by ampersands (`&`). If there is no query string
+     * in the request, this method will return {@code null}.
+     * </p>
+     *
+     * <p>
+     * For example, if the full request URL is
+     * {@code http://localhost:8080/myapp/api/users?id=123&name=John}, this method
+     * will return {@code id=123&name=John}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the query string as a {@link String}, or {@code null} if no query string is present
+     */
+    public static String getQueryString(HttpServletRequest request) {
+        return request.getQueryString();
+    }
+
+
+    /**
+     * Retrieves the full URL of the current request, including the query string.
+     * <p>
+     * This method constructs the full URL of the request by combining the base URL
+     * (scheme, server name, port, and request URI) with the query string, if present.
+     * </p>
+     *
+     * <p>
+     * For example, if the request URL is {@code http://localhost:8080/myapp/api/users}
+     * and the query string is {@code id=123&name=John}, this method will return:
+     * {@code http://localhost:8080/myapp/api/users?id=123&name=John}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the full URL of the current request, including the query string,
+     *         as a {@link String}
+     */
+    public static String getFullUrl(HttpServletRequest request) {
+        String url = getUrl(request);
+        String queryString = getQueryString(request);
+        return url + "?" + queryString;
+    }
+
+
+    /**
+     * Retrieves the request URI of the current request.
+     * <p>
+     * This method returns the part of the request URL that represents the
+     * resource's path on the server. The URI includes the context path but
+     * excludes the scheme, server name, port, and query string.
+     * </p>
+     *
+     * <p>
+     * For example, if the full request URL is
+     * {@code http://localhost:8080/myapp/api/users?id=123}, and the context path
+     * is {@code /myapp}, this method will return {@code /myapp/api/users}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the request URI as a {@link String}
+     */
+    public static String getUri(HttpServletRequest request) {
+        return request.getRequestURI();
+    }
+
+
+    /**
+     * Constructs the full URI pattern for the current request.
+     * <p>
+     * This method combines the context path and the servlet pattern to form the
+     * full URI pattern. The context path is the base path of the application,
+     * and the servlet pattern represents the part of the URI handled by a specific servlet.
+     * </p>
+     *
+     * <p>
+     * For example, if the context path is {@code /myapp} and the servlet pattern
+     * is {@code /api/users/{id}}, this method will return {@code /myapp/api/users/{id}}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the full URI pattern as a {@link String}, combining the context path
+     *         and the servlet pattern
+     */
+    public static String getUriPattern(HttpServletRequest request) {
+        String contextPath = getContextPath(request);
+        String servletPattern = getServletPattern(request);
+        return contextPath + servletPattern;
+    }
+
+
+    /**
+     * Retrieves the context path of the current request.
+     * <p>
+     * The context path is the base path of the web application. It is the
+     * portion of the request URL that specifies the application context and
+     * precedes the servlet path. If the application is deployed to the root
+     * context, this method returns an empty string.
+     * </p>
+     *
+     * <p>
+     * For example, if the full request URL is
+     * {@code http://localhost:8080/myapp/api/users}, this method will return {@code /myapp}.
+     * </p>
+     *
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the context path of the application as a {@link String}
+     */
+    public static String getContextPath(HttpServletRequest request) {
+        return request.getContextPath();
+    }
+
+
+    /**
+     * Retrieves the best matching pattern for the servlet from the request.
+     * <p>
+     * This method extracts the attribute {@code BEST_MATCHING_PATTERN_ATTRIBUTE}
+     * from the {@link HttpServletRequest}, which represents the URL pattern
+     * that best matches the current request. Note that the servlet pattern
+     * does not include the context path.
+     * </p>
+     * <p>
+     * For example, if the request URL is {@code http://localhost:8080/myapp/api/users/123}
+     * and the context path is {@code /myapp}, the servlet pattern might be
+     * {@code /api/users/{id}}, which matches the request URL after removing the context path.
+     * </p>
+     * @param request the {@link HttpServletRequest} object containing the request data
+     * @return the best matching servlet pattern as a {@link String}
+     */
+    public static String getServletPattern(HttpServletRequest request) {
+        return (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+    }
+
 
     /**
      * Parses a query string into a map of key-value pairs.
@@ -158,7 +325,7 @@ public class HttpUtils {
      *         map will be empty.
      */
     public static Map<String, List<String>> getQueryParameters(HttpServletRequest request) {
-        return parseQueryString(request.getQueryString());
+        return parseQueryString(getQueryString(request));
     }
 
 

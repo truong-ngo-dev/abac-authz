@@ -35,6 +35,11 @@ public class HttpRequest {
     private String contextPath;
 
     /**
+     * The URI (Uniform Resource Identifier Pattern) of the requested resource.
+     */
+    private String servletPattern;
+
+    /**
      * The URI (Uniform Resource Identifier) of the requested resource.
      */
     private String requestedURI;
@@ -94,6 +99,7 @@ public class HttpRequest {
         httpRequest.metadata = Metadata.parse(request);
         httpRequest.method = request.getMethod();
         httpRequest.contextPath = request.getContextPath();
+        httpRequest.servletPattern = HttpUtils.getServletPattern(request);
         httpRequest.requestedURI = request.getRequestURI();
         httpRequest.requestURL = request.getRequestURL().toString();
         httpRequest.servletPath = request.getServletPath();
