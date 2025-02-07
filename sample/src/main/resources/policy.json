@@ -22,7 +22,7 @@
                     "description": "apply for get specific rule",
                     "target": {
                         "type": "LITERAL",
-                        "expression": "T(com.nob.authorization.core.utils.StringUtils).matchUrlPath('/api/note/{id}', action.request.requestedURI) && action.request.method == 'GET'"
+                        "expression": "action.request.servletPattern == '/api/note/{id}' && action.request.method == 'GET'"
                     },
                     "condition": {
                         "type": "LITERAL",
