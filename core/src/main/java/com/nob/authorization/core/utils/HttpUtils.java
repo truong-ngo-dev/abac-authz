@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -229,7 +230,8 @@ public class HttpUtils {
      */
     public static String parseRequestBody(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = request.getReader()) {
+        try (InputStream inputStream = request.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
