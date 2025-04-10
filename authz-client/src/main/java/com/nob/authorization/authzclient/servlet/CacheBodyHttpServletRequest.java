@@ -1,4 +1,4 @@
-package com.nob.authorization.core.servlet;
+package com.nob.authorization.authzclient.servlet;
 
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +10,6 @@ import java.io.*;
 public class CacheBodyHttpServletRequest extends HttpServletRequestWrapper {
 
     private final byte[] cachedBody;
-
 
     public CacheBodyHttpServletRequest(HttpServletRequest request) throws IOException {
         super(request);

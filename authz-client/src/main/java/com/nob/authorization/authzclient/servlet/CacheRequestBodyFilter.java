@@ -1,4 +1,4 @@
-package com.nob.authorization.core.servlet;
+package com.nob.authorization.authzclient.servlet;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
