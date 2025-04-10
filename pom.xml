@@ -18,11 +18,12 @@
 
     <groupId>com.nob.authz</groupId>
     <artifactId>abac-authz-starter</artifactId>
-    <version>1.0.0</version>
+    <version>${authz-version}</version>
 
     <packaging>pom</packaging> <!-- create container for submodules with jar packing -->
 
     <properties>
+        <authz-version>2.0.0</authz-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin-version>3.8.1</maven-compiler-plugin-version>
         <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
